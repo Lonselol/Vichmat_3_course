@@ -19,8 +19,6 @@ def gaussian_elimination(A, b):
             ratio = A[j][i] / A[i][i] #текущий на главный и нули ниже главный
             A[j] -= ratio * A[i]
             b[j] -= ratio * b[i]
-        print (A)
-        print (b)
 
     # Обратный ход - находим решение системы, дот - скалярное для суммы
     x = np.zeros(n)

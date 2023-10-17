@@ -1,4 +1,4 @@
-from libs import stuff
+from mylibs import stuff as stuff
 from methods import gaussian_elimination as ge
 
 E = 10**(-13)

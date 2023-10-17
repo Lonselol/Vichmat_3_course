@@ -21,5 +21,5 @@ def check(A, b):
 
 #Проверка погрешности
 def checkError(result, A, b, error):
-  result = (np.dot(A, result) - b) <= error
+  result = np.abs(np.dot(A, result) - b) #<= error
   return result

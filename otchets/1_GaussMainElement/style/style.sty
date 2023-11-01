@@ -1,0 +1,62 @@
+\RequirePackage{polyglossia}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{hyperref}
+\RequirePackage{listings}
+\RequirePackage{xcolor}
+\usepackage{caption}
+\usepackage{courier}
+\RequirePackage{csquotes}
+\usepackage{sourcecodepro}
+\usepackage[export]{adjustbox}
+
+\setdefaultlanguage{russian}
+\SetLanguageKeys{russian}{indentfirst=true}
+
+\setmainfont{Times New Roman}
+\newfontfamily{\cyrillicfont}{Times New Roman}
+\newfontfamily{\cyrillicfonttt}{Times New Roman}
+\newfontfamily{\cyrillicfontsf}{Times New Roman}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codegreen}{rgb}{0,0.6,1}
+\definecolor{backcolour}{rgb}{0.90,0.90,0.90}
+
+\lstdefinestyle{rust}
+{
+    language=C,
+    frame=lines,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{red!80!blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\everymath{\displaystyle}
+
+\hypersetup{%
+    pdfborder = {0 0 0}
+}
+
+\geometry{left=2.5cm}
+\geometry{right=1.5cm}
+\geometry{top=2cm}
+\geometry{bottom=2cm}
+
+\parindent 1.25cm
+\linespread{1.5}

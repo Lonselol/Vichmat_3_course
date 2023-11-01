@@ -5,7 +5,7 @@ E = 10**(-13)
 
 #Делаем матрицу
 stuff.generate(7)
-m = stuff.readMatrix("./txts/generated.txt")
+m = stuff.readMatrix("./txts/matrix.txt")
 n = len(m[0])
 #Проверяем результаты
 checkResult = stuff.check(m[0], m[1])
@@ -13,7 +13,7 @@ print("Результат\n", checkResult)
 
 #Методы
 methodResult = ge.gaussian_elimination(m[0], m[1], n)
-print("Результат метода\n", methodResult)
+print("Гаусс с выбором главного элемента\n", methodResult)
 
 #Ошибки
 check = (stuff.checkError(methodResult, m[0], m[1], E))

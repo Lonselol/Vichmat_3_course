@@ -1,5 +1,4 @@
 import numpy as np
-import copy
 
 def gaussian_elimination(A, b, n):
     iter = 0
@@ -8,7 +7,7 @@ def gaussian_elimination(A, b, n):
         i = iter
         j = 0
         
-        # find absolute max element of the array
+        # абсолютный максимум
         for l in range(iter, n):
             for k in range(n):
                 if abs(maxx) < abs(A[l, k]):
@@ -16,24 +15,24 @@ def gaussian_elimination(A, b, n):
                     i = l
                     j = k
         
-        # swap rows
+        # Поменяться местами
         A[[iter, i]] = A[[i, iter]]
         b[[iter, i]] = b[[i, iter]]
         
-        # work process
+        # Работайте братья
         for l in range(iter + 1, n):
-            if A[iter, j] != 0:  # Check for division by zero
+            if A[iter, j] != 0:  # НЫА ноль
                 m = A[l, j] / A[iter, j]
                 A[l] -= m * A[iter]
                 b[l] -= m * b[iter]
         
-        if maxx != 0:  # Check for division by zero
+        if maxx != 0:  # На ноль
             A[iter] /= maxx
             b[iter] /= maxx
         
         iter += 1
     
-    # reverse course
+    # Обратный ход
     ans = np.zeros(n)
     
     for k in range(1, n + 1):

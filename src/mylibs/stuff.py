@@ -21,5 +21,8 @@ def check(A, b):
 
 #Проверка погрешности
 def checkError(result, A, b, error):
-  result = np.abs(np.dot(A, result) - b) #<= error
-  return result
+  res = {}
+  errors = np.abs(np.dot(A, result) - b) # <= error
+  for index, item in enumerate(errors):
+    res.update({index: [item, item<=error]})
+  return res

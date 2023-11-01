@@ -2,15 +2,21 @@ from mylibs import stuff as stuff
 from methods import gaussian_elimination as ge
 
 E = 10**(-13)
-n = 10
 
-#stuff.generate(10)
-m = stuff.readMatrix("./txts/matrix.txt")
-methodResult = ge.gaussian_elimination(m[0], m[1])
-print(methodResult)
+#Делаем матрицу
+stuff.generate(7)
+m = stuff.readMatrix("./txts/generated.txt")
+n = len(m[0])
+#Проверяем результаты
 checkResult = stuff.check(m[0], m[1])
-print(checkResult)
+print("Результат\n", checkResult)
 
-print(" ")
+#Методы
+methodResult = ge.gaussian_elimination(m[0], m[1], n)
+print("Результат метода\n", methodResult)
 
-print(stuff.checkError(methodResult, m[0], m[1], E))
+#Ошибки
+check = (stuff.checkError(methodResult, m[0], m[1], E))
+print ("Ошибки")
+for index in check:
+  print (check.get(index))

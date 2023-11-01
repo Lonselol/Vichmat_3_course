@@ -1,26 +1,49 @@
 import numpy as np
+import copy
 
-#Схема Гаусса с выбором главного элемента
-
-def gaussian_elimination(A, b):
-    n = len(A)
-    
-    for i in range(n):
-        # Выбор главного элемента в оставшейся матрице по модулю
-        max_idx = np.abs(A[i:, i]).argmax() + i
-        A[[i, max_idx]] = A[[max_idx, i]]
-        b[[i, max_idx]] = b[[max_idx, i]]
+def gaussian_elimination(A, b, n):
+    iter = 0
+    while iter < n:
+        maxx = A[iter, iter]
+        i = iter
+        j = 0
         
-        # Треугольник
-        for j in range(i+1, n):
-            ratio = A[j][i] / A[i][i] #текущий на главный и нули ниже главный (1-1=0)
-            A[j] -= ratio * A[i]
-            b[j] -= ratio * b[i]
-        print (A[i][i])
-
-    # Обратный ход - находим решение системы, дот - скалярное для суммы
-    x = np.zeros(n)
-    for i in range(n-1, -1, -1):
-        x[i] = (b[i] - np.dot(A[i][i+1:], x[i+1:])) / A[i][i]
-
-    return x
+        # find absolute max element of the array
+        for l in range(iter, n):
+            for k in range(n):
+                if abs(maxx) < abs(A[l, k]):
+                    maxx = A[l, k]
+                    i = l
+                    j = k
+        
+        # swap rows
+        A[[iter, i]] = A[[i, iter]]
+        b[[iter, i]] = b[[i, iter]]
+        
+        # work process
+        for l in range(iter + 1, n):
+            if A[iter, j] != 0:  # Check for division by zero
+                m = A[l, j] / A[iter, j]
+                A[l] -= m * A[iter]
+                b[l] -= m * b[iter]
+        
+        if maxx != 0:  # Check for division by zero
+            A[iter] /= maxx
+            b[iter] /= maxx
+        
+        iter += 1
+    
+    # reverse course
+    ans = np.zeros(n)
+    
+    for k in range(1, n + 1):
+        for l in range(n):
+            if A[n - k, l] == 1:
+                ans[l] = b[n - k]
+                i = l
+        
+        for k in range(n):
+            b[k] -= ans[i] * A[k, i]
+            A[k, i] = 0
+    
+    return ans

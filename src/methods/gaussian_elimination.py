@@ -1,48 +1,42 @@
 import numpy as np
 
-def gaussian_elimination(A, b, n):
-    iter = 0
-    while iter < n:
-        maxx = A[iter, iter]
-        i = iter
-        j = 0
-        
-        # абсолютный максимум
-        for l in range(iter, n):
-            for k in range(n):
-                if abs(maxx) < abs(A[l, k]):
-                    maxx = A[l, k]
-                    i = l
-                    j = k
-        
-        # Поменяться местами
-        A[[iter, i]] = A[[i, iter]]
-        b[[iter, i]] = b[[i, iter]]
-        
-        # Работайте братья
-        for l in range(iter + 1, n):
-            if A[iter, j] != 0:  # НЫА ноль
-                m = A[l, j] / A[iter, j]
-                A[l] -= m * A[iter]
-                b[l] -= m * b[iter]
-        
-        if maxx != 0:  # На ноль
-            A[iter] /= maxx
-            b[iter] /= maxx
-        
-        iter += 1
+def get_max_index(mat: np.matrix, exclude: list):
+  args = abs(mat).argmax(axis=1)
+  maxes = abs(mat).max(axis=1)
+  alist = [((k, args[k]), maxes[k]) for k in range(len(args)) if k not in exclude]
+  argmax = max(alist, key = lambda x: x[1])
+  return argmax[0]
+
+def gaussian_elimination(matrix: np.matrix, values: np.array):
+  matrix = matrix.copy().astype(float)
+  values = values.copy().astype(float)
+
+  if np.linalg.det(matrix) == 0:
+    exit
+  
+  rows_exclude = []
+  for _ in range(len(matrix)):
+    ind = get_max_index(matrix, rows_exclude)
+    rows_exclude.append(ind[0])
+    values[ind[0]] = values[ind[0]] / matrix[ind]
+    matrix[ind[0]] = matrix[ind[0]] / matrix[ind]
+
+    for i in range(len(matrix)):
+      if i not in rows_exclude:
+        values[i] -= matrix[(i, ind[1])] * values[ind[0]]
+        matrix[i] -= matrix[(i, ind[1])] * matrix[ind[0]]
+
+  rows_exclude.reverse()
+  for i in rows_exclude:
+    ind = matrix[i].argmax()
+    for j in range (len(matrix)):
+      if j != i:
+        values[j] -= matrix[(j, ind)] * values[i]
+        matrix[j] -= matrix[(j, ind)] * matrix[i]
     
-    # Обратный ход
-    ans = np.zeros(n)
-    
-    for k in range(1, n + 1):
-        for l in range(n):
-            if A[n - k, l] == 1:
-                ans[l] = b[n - k]
-                i = l
-        
-        for k in range(n):
-            b[k] -= ans[i] * A[k, i]
-            A[k, i] = 0
-    
-    return ans
+  solution = np.array([0.] * len(matrix))
+  for i in range(len(matrix)):
+    ind = matrix[i].argmax()
+    solution[ind] = values[i]
+
+  return solution

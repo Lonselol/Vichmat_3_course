@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 #Рид филе
 def readMatrix(fileName = "./txts/generated.txt"):
@@ -26,3 +27,17 @@ def checkError(result, A, b, error):
   for index, item in enumerate(errors):
     res.update({index: [item, item<=error]})
   return res
+
+#Гистограмма решений
+def createBarChart(errors):
+  # This is a list of unique values appearing in the input list
+  errors_unique = list(set(errors))
+  # This is the corresponding count for each value
+  counts = [errors.count(value) for value in errors_unique]
+  # Some labels and formatting to look more like the example
+  #plt.bar_label(barcontainer, errors_unique, label_type='edge')
+  plt.hist(errors, bins=len(errors_unique)*2, edgecolor='black')
+  plt.ylabel("Количество элементов решений с точностью")
+  plt.xlabel("Точность")
+  plt.title("")
+  plt.show()

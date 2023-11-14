@@ -5,17 +5,22 @@
 \usepackage{pdfpages}
 
 \begin{document}
+
     \input{parts/titlepage}
     \pagebreak
 
     \tableofcontents
     \pagebreak
 
-    \input{parts/introduction}
+    \input{parts/introduction.tex}
     \pagebreak
 
-    \input{parts/gaussmainelement.tex}
+    \input{parts/methods/exact.tex}
     \pagebreak
 
-    \input{parts/conclusion}
+    \input{parts/methods/iterating.tex}
+    \pagebreak
+
+    \input{parts/conclusion.tex}
+
 \end{document}

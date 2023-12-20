@@ -1,11 +1,12 @@
 from mylibs import stuff as stuff
 from methods import gaussian_elimination as ge
+from methods import reflections_first as rf
 import math
 
 E = 10**(-13)
 I = 1
-NGEN = 1
-MATRIX = "./txts/matrix.txt"
+NGEN = 10
+MATRIX = "./txts/generated.txt"
 
 #Делаем матрицу
 
@@ -20,8 +21,11 @@ for i in range(I):
   print("Результат\n", checkResult)
 
   #Методы
-  methodResult = ge.gaussian_elimination(m[0], m[1])
-  print("Гаусс с выбором главного элемента\n", methodResult)
+  #methodResult = ge.gaussian_elimination(m[0], m[1])
+  #print("Метод Гаусса с выбором главного\n", methodResult)
+  #Отражений_1
+  methodResult = rf.reflections_first(m[0], m[1])
+  print("Метод отражений\n", methodResult)
 
   #Ошибки
   check = (stuff.checkError(methodResult, m[0], m[1], E))

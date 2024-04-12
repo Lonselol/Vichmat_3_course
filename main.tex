@@ -3,7 +3,7 @@
 \usepackage{lipsum}
 \usepackage{style/titlepage}
 \usepackage{pdfpages}
-
+\usepackage{xr}
 \begin{document}
 
     \input{parts/titlepage}
@@ -15,10 +15,13 @@
     \input{parts/introduction.tex}
     \pagebreak
 
-    \input{parts/methods/exact.tex}
+    \input{parts/methods/exact/exactMain.tex}
     \pagebreak
 
-    \input{parts/methods/iterating.tex}
+    \input{parts/methods/iterating/iteratingMain.tex}
+    \pagebreak
+
+    \input{parts/methods/eigenvalues/eigenvaluesMain.tex}
     \pagebreak
 
     \input{parts/conclusion.tex}

@@ -1,95 +1,46 @@
 # Вращения с преградами
 
 import numpy as np
+import sympy as sp
+A = np.array([[2.2, 1, 0.5, 2],
+              [1, 1.3, 2, 1],
+              [0.5, 2, 0.5, 1.6],
+              [2, 1, 1.6, 2]])
+n, _ = A.shape
+eps = 1e-10
+x_col = np.array([sp.Symbol(f"x_{i}") for i in range(n)])
+Full = np.hstack((A, x_col[np.newaxis].T))
 
-class Rotation:
-    def __init__(self, n: int, mtx: np.ndarray, p: int):
-        self.k = 0
-        self.n = n
-        self.mtx = mtx
-        self.p = p
+for i in range(n - 1):
+    for j in range(i + 1, n):
+        Full[j, :] = Full[j, :] - (Full[j, i] / Full[i, i]) * Full[i, :]
 
-    def sign(self, num):
-        if num > 0:
-            return 1
-        return -1
+Full_s = [[isinstance(Full[i, j], sp.Expr) for j in range(n + 1)]
+    for i in range(n)]
 
-    def index_of_largest(self, matrix):
-        largest = abs(matrix[0][1])
-        i_l, j_l = 0, 1
-        for i in range(self.n):
-            for j in range(self.n):
-                if i == j:
-                    continue
-                if abs(matrix[i, j]) > largest:
-                    largest = abs(matrix[i, j])
-                    i_l, j_l = i, j
-        return i_l, j_l
+x_next = np.ones(n)
+alpha_next = 1
+count = 0
+diff = 1000000000000
+symbols = [[x_col[i], 0] for i in range(n)]
 
-    def check_tol(self, matrix):
-
-        # Преграда
-        self.tol = np.sqrt(max(abs(np.diag(matrix)))) * (10 ** (-self.k))
-
-        #Проверка внедиагональных элементов
-        for i in range(self.n):
-            for j in range(self.n):
-                if i == j:
-                    continue
-                if abs(matrix[i, j]) >= self.tol:
-                    return False
-
-        if self.k < self.p:
-            self.k += 1
-            return False
-
-        return True
-
-    def solve(self):
-        mtx = self.mtx
-        steps = 0
-
-        while not self.check_tol(mtx):
-            q, p = self.index_of_largest(mtx)
-
-            d = abs(mtx[p, p] - mtx[q, q]) / np.sqrt(
-                (mtx[p, p] - mtx[q, q]) ** 2 + 4 * mtx[p, q] ** 2
-            )
-
-            c = np.sqrt(0.5 * (1 + d))
-            s = self.sign(mtx[p, q] * (mtx[p, p] - mtx[q, q])) * np.sqrt(0.5 * (1 - d))
-
-            R = np.eye(self.n)
-            R[p, p] = R[q, q] = c
-            R[p, q] = -s
-            R[q, p] = s
-            mtx = R.T.dot(mtx).dot(R)
-            mtx[p, q] = mtx[q, p] = 0
-            steps += 1
-
-        return steps, np.diag(mtx)
-
-
-if __name__ == "__main__":
-    np.set_printoptions(linewidth=200)
-    np.random.seed(123)
-
-    n = 4
-    p = 3
-    mtx = np.array(
-        [
-            [-0.1687, 0.353699, 0.00854, 0.733624],
-            [0.353699, 0.056519, -0.723182, -0.07644],
-            [0.00854, -0.723182, 0.015938, 0.342333],
-            [0.733624, -0.07644, 0.342333, -0.045744],
-        ]
-    )
-
-    ans = Rotation(n, mtx, p).solve()
-
-    print("Initial mtx:\n", mtx, "\n\n")
-    print("Steps:\n", ans[0], "\n\n")
-    print("Eigenvalues:\n", sorted(ans[1]), "\n\n")
-
-    x = abs(np.array(sorted(np.linalg.eigvals(mtx))) - np.array(sorted(ans[1])))
-    print(x)
+while diff > eps and count < 100000:
+    count += 1
+    x_pre = x_next
+    alpha_pre = alpha_next
+    f_pre = x_pre / alpha_pre
+    for i in range(n):
+        symbols[i][1] = f_pre[i]
+    x_next[n - 1] = Full[n - 1, n].subs(symbols) / Full[n - 1, n - 1]
+    for i in range(n - 2, -1, -1):
+        x_next[i] = (Full[i, n].subs(symbols) - sum([Full[i, k] * x_next[k] for k in range(i + 1, n)])) / Full[i, i]
+    max_x = 0
+    for i in range(n):
+        if abs(max_x) < abs(x_next[i]):
+            max_x = x_next[i]
+    alpha_next = max_x
+    diff = abs((1 / alpha_pre) - (1 / alpha_next))
+lamda = 1 / alpha_next
+print("Count: ", count)
+validate_lamda = abs(np.linalg.det(A - lamda * np.eye(n)))
+print("Diff:", diff)

@@ -19,7 +19,7 @@ def gaussianElimination(A, b):
 
     # Прямой ход метода Гаусса
     for p in range(n - 1):
-        pivot_row = find_pivot(A, p, n)
+        pivot_row = findPivot(A, p, n)
 
         A[[p, pivot_row]] = A[[pivot_row, p]]
         b[[p, pivot_row]] = b[[pivot_row, p]]
